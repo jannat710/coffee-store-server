@@ -104,6 +104,18 @@ async function run() {
         const result = await userCollection.insertOne(user);
         res.send(result);
     });
+    //Patch a user field from client side to database
+    app.patch('/user', async (req, res) => {
+        const user = req.body;
+        const filter = { email: user.email }
+        const updateDoc = {
+            $set: {
+                lastLoggedAt: user.lastLoggedAt
+            }
+        }
+        const result = await userCollection.updateOne(filter, updateDoc);
+        res.send(result);
+    })
 
     //Delete a user from client side and database
     app.delete('/user/:id', async (req, res) => {
