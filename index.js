@@ -34,6 +34,9 @@ async function run() {
     //database name and collection name
     const coffeeCollection = client.db('coffeeDB').collection('coffee');
 
+    //CRUD Review and create user to the database
+    const userCollection = client.db('coffeeDB').collection('user');
+
     app.get('/coffee', async (req, res) => {
         const cursor = coffeeCollection.find();
             const result = await cursor.toArray();
@@ -47,6 +50,9 @@ async function run() {
             const result = await coffeeCollection.findOne(query);
             res.send(result);
     })   
+
+
+
 
 
     //Send Coffee data to the server and store in the mongodb database
@@ -83,6 +89,30 @@ async function run() {
         const result = await coffeeCollection.deleteOne(query);
         res.send(result);
     })
+    // user related apis
+    app.get('/user', async (req, res) => {
+        const cursor = userCollection.find();
+        const users = await cursor.toArray();
+        res.send(users);
+    })
+
+    //CRUD Review and create user to the database
+    
+    app.post('/user', async (req, res) => {
+        const user = req.body;
+        console.log(user);
+        const result = await userCollection.insertOne(user);
+        res.send(result);
+    });
+
+    //Delete a user from client side and database
+    app.delete('/user/:id', async (req, res) => {
+        const id = req.params.id;
+        const query = { _id: new ObjectId(id) };
+        const result = await userCollection.deleteOne(query);
+        res.send(result);
+    })
+    
 
 
 
